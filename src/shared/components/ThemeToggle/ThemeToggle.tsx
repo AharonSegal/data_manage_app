@@ -1,3 +1,12 @@
+/**
+ * ThemeToggle.tsx — light/dark mode toggle button.
+ *
+ * Two variants:
+ *  - default: full-width sidebar button with label (used in AppSidebar)
+ *  - compact: small bordered button for inline use (used in SettingsPage)
+ * Both animate the Sun ↔ Moon icon swap with Framer Motion.
+ */
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon } from 'lucide-react';
 import { useTheme } from '@/shared/hooks/useTheme';

@@ -1,3 +1,8 @@
+/**
+ * routes.ts — all app route paths as typed constants.
+ * Always import from here — never hardcode path strings in components or App.tsx.
+ */
+
 export const ROUTES = {
   DASHBOARD: '/dashboard',
   ACTIVITY: '/activity',

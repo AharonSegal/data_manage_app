@@ -1,35 +1,53 @@
+/**
+ * App.tsx — root component.
+ *
+ * Wraps the app in ThemeProvider → AuthProvider → ErrorBoundary.
+ * Auth gate: unauthenticated users see LoginPage; non-admin users see
+ * AccessDenied. Authenticated admins get the full app with lazy-loaded
+ * page routes (NotesProvider + ActivityProvider + RouterProvider).
+ */
+
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
 import { ThemeProvider } from '@/shared/context/ThemeContext';
 import { AuthProvider, useAuth } from '@/shared/context/AuthContext';
 import { NotesProvider } from '@/shared/context/NotesContext';
+import { ActivityProvider } from '@/shared/context/ActivityContext';
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary/ErrorBoundary';
 import { AppLayout } from '@/shared/components/Layout/AppLayout';
 import { LoginPage } from '@/shared/components/auth/LoginPage';
 import { AccessDenied } from '@/shared/components/auth/AccessDenied';
 import { ROUTES } from '@/shared/constants/routes';
 
-// Pages
-import DashboardPage from '@/pages/Dashboard/DashboardPage';
-import ActivityLogPage from '@/pages/ActivityLog/ActivityLogPage';
-import SettingsPage from '@/pages/Settings/SettingsPage';
-import GlobalNotesPage from '@/pages/Notes/NotesPage';
-import NotFoundPage from '@/pages/NotFound/NotFoundPage';
+// Suspense fallback
+const SkeletonFallback = () => (
+  <div className="flex-1 flex items-center justify-center bg-[var(--color-bg)]">
+    <div className="w-8 h-8 rounded-full border-2 border-[var(--color-brand)] border-t-transparent animate-spin" />
+  </div>
+);
+
+// Pages — lazy loaded for code splitting
+const DashboardPage = lazy(() => import('@/pages/Dashboard/DashboardPage'));
+const ActivityLogPage = lazy(() => import('@/pages/ActivityLog/ActivityLogPage'));
+const SettingsPage = lazy(() => import('@/pages/Settings/SettingsPage'));
+const GlobalNotesPage = lazy(() => import('@/pages/Notes/NotesPage'));
+const NotFoundPage = lazy(() => import('@/pages/NotFound/NotFoundPage'));
 
 // Certificates
-import CertificatesOverviewPage from '@/pages/projects/Certificates/Overview/OverviewPage';
-import AllEntriesPage from '@/pages/projects/Certificates/Data/AllEntries/AllEntriesPage';
-import ImportPage from '@/pages/projects/Certificates/Data/Import/ImportPage';
-import HistoryPage from '@/pages/projects/Certificates/Data/History/HistoryPage';
-import CertActionsPage from '@/pages/projects/Certificates/Actions/ActionsPage';
-import CertNotesPage from '@/pages/projects/Certificates/Notes/NotesPage';
+const CertificatesOverviewPage = lazy(() => import('@/pages/projects/Certificates/Overview/OverviewPage'));
+const AllEntriesPage = lazy(() => import('@/pages/projects/Certificates/Data/AllEntries/AllEntriesPage'));
+const ImportPage = lazy(() => import('@/pages/projects/Certificates/Data/Import/ImportPage'));
+const HistoryPage = lazy(() => import('@/pages/projects/Certificates/Data/History/HistoryPage'));
+const CertActionsPage = lazy(() => import('@/pages/projects/Certificates/Actions/ActionsPage'));
+const CertNotesPage = lazy(() => import('@/pages/projects/Certificates/Notes/NotesPage'));
 
 // Project B
-import PBOverviewPage from '@/pages/projects/ProjectB/Overview/OverviewPage';
-import PBDataPage from '@/pages/projects/ProjectB/Data/DataPage';
-import PBActionsPage from '@/pages/projects/ProjectB/Actions/ActionsPage';
-import PBNotesPage from '@/pages/projects/ProjectB/Notes/NotesPage';
+const PBOverviewPage = lazy(() => import('@/pages/projects/ProjectB/Overview/OverviewPage'));
+const PBDataPage = lazy(() => import('@/pages/projects/ProjectB/Data/DataPage'));
+const PBActionsPage = lazy(() => import('@/pages/projects/ProjectB/Actions/ActionsPage'));
+const PBNotesPage = lazy(() => import('@/pages/projects/ProjectB/Notes/NotesPage'));
 
 const router = createBrowserRouter([
   {
@@ -95,8 +113,12 @@ const AppContent = () => {
   // Authenticated admin → full app
   return (
     <NotesProvider>
-      <Toaster richColors position="bottom-right" />
-      <RouterProvider router={router} />
+      <ActivityProvider>
+        <Toaster richColors position="bottom-right" />
+        <Suspense fallback={<SkeletonFallback />}>
+          <RouterProvider router={router} />
+        </Suspense>
+      </ActivityProvider>
     </NotesProvider>
   );
 };

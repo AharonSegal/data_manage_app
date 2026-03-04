@@ -72,3 +72,17 @@ Initial scaffold: Vite + React 19 + TypeScript strict mode + Tailwind CSS v3.
 - `services/` package: Gmail + WhatsApp fully configured, zero TypeScript errors
 - `basestate.md` — comprehensive 16-section base documentation
 - `.env.example` files (root + services) — credential templates
+
+---
+
+## Pre-Project Polish (complete) — v1.1.0
+
+### Built
+- **Code splitting** — All 13 pages converted to `React.lazy()` + `Suspense` with spinner fallback. Initial bundle splits into per-route chunks, reducing first-load JS.
+- **PWA manifest** — `public/manifest.json` (name, icons, display: standalone, theme color). Added `<link rel="manifest">`, `<meta name="theme-color">`, and Apple mobile web app meta tags to `index.html`.
+- **Offline indicator** — `useOnlineStatus` hook (navigator.onLine + events). `OfflineBar` component slides in with Framer Motion `AnimatePresence` when connection is lost, auto-hides on reconnect. Wired above mobile top bar in `AppLayout`.
+- **N keyboard shortcut** — `useNoteKeyboardShortcut(onCreate)` hook using `useRef` pattern (stable callback, no `useCallback` required at call sites). Ignores keypresses in inputs, textareas, select elements, and contentEditable. Wired in all three notes pages (Global, Certificates, Project B).
+- **Mobile page label** — `useCurrentPageLabel()` hook flattens `NAV_ITEMS` tree and matches `pathname` to derive label. Mobile top bar now shows current page name instead of hardcoded "DataCenter".
+- **Activity Log** — `ActivityEntry` + `ActivityEntryFirestore` types. `ActivityContext` with `onSnapshot` listener on `activityLogs` collection (ordered by timestamp desc, limit 100) + `logActivity()` write function using `serverTimestamp()`. Full timeline UI in `ActivityLogPage`: type icons, status badges, project tags, relative timestamps, empty state. `ActivityProvider` added to `App.tsx`. Explicit rule added to `firestore.rules`.
+- **Breadcrumbs** — `Breadcrumbs` component builds `PATH_LABEL_MAP` from `NAV_ITEMS` tree at module scope. Accumulates path segments, looks up labels, renders clickable links for all except last. Shows only on routes with 2+ segments (deep pages). Injected into `PageHeader` above the `<h1>`.
+- **Cloud Functions scaffold** — `functions/` directory with `package.json` (depends on `datacenter-services: file:../services`), `tsconfig.json` (CommonJS, ES2020), `src/index.ts` (barrel), `src/gmail/index.ts` (`sendEmailHttp` HTTPS callable), `src/whatsapp/index.ts` (`sendWhatsAppHttp` HTTPS callable). `firebase.json` updated with `"functions"` config.

@@ -1,3 +1,10 @@
+/**
+ * use-mobile.ts — mobile breakpoint detection hook.
+ *
+ * Returns true when the viewport is below 768 px. Uses a MediaQueryList
+ * listener so it reacts to window resize without polling.
+ */
+
 import { useEffect, useState } from 'react';
 
 const MOBILE_BREAKPOINT = 768;

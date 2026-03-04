@@ -1,3 +1,11 @@
+/**
+ * AppSidebar.tsx — main navigation sidebar.
+ *
+ * Renders the app logo/name header, global nav items, a "Projects" section
+ * with project nav items, and a footer with the user avatar and ThemeToggle.
+ * Nav items are split from NAV_ITEMS by section at module load time.
+ */
+
 import { APP_CONFIG } from '@/config/app.config';
 import { NAV_ITEMS } from '@/shared/constants/nav';
 import {

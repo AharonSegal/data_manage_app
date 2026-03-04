@@ -1,3 +1,11 @@
+/**
+ * NoteCard.tsx — single note card in the NotesList.
+ *
+ * Shows title, content preview (first ~60 chars), tag chips (max 2 + overflow
+ * badge), relative timestamp, and hover-revealed pin / delete buttons.
+ * Selected and pinned states are indicated with a colored left border.
+ */
+
 import { formatDistanceToNow, format, isToday, isYesterday } from 'date-fns';
 import { Pin, X } from 'lucide-react';
 import { motion } from 'framer-motion';

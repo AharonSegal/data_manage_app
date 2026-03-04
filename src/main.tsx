@@ -1,3 +1,8 @@
+/**
+ * main.tsx — Vite entry point.
+ * Mounts the React app into #root with StrictMode enabled.
+ */
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@/shared/styles/globals.css';

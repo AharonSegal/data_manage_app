@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Cloud Functions compiled output — never commit
+functions/lib
+
 # Firebase / Auth secrets — never commit
 src/config/auth.config.ts
 

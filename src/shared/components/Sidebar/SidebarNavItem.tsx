@@ -1,3 +1,11 @@
+/**
+ * SidebarNavItem — single navigation item in the sidebar.
+ *
+ * Renders as a leaf link (SidebarMenuButton) or a collapsible parent
+ * with animated children (Framer Motion). Handles depth 0 (top-level)
+ * and depth 1+ (sub-items) with the correct shadcn sub-menu components.
+ */
+
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
@@ -26,7 +34,6 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/shared/components/ui/sidebar';
-import { cn } from '@/shared/lib/utils';
 
 const ICON_MAP: Record<string, LucideIcon> = {
   LayoutDashboard,
@@ -118,7 +125,7 @@ export const SidebarNavItem = ({ item, depth = 0 }: SidebarNavItemProps) => {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: 'easeInOut' }}
-            className={cn('overflow-hidden', depth === 0 ? '' : '')}
+            className="overflow-hidden"
           >
             <SidebarMenuSub>
               {item.children.map((child) => (

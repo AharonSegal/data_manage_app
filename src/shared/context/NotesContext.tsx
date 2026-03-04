@@ -1,3 +1,12 @@
+/**
+ * NotesContext.tsx — global notes state backed by Firestore.
+ *
+ * Keeps a real-time onSnapshot listener on the flat "notes" collection
+ * (ordered by updatedAt desc). All CRUD operations write directly to
+ * Firestore; the listener reflects changes instantly across tabs.
+ * `getNotesForProject(projectId)` filters client-side — no extra queries.
+ */
+
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import {
   collection,

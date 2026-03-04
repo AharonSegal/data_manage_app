@@ -1,3 +1,11 @@
+/**
+ * ErrorBoundary.tsx — top-level React error boundary.
+ *
+ * Catches any uncaught render error in the component tree and shows a
+ * friendly error screen with "Try again" (resets state) and "Reload page"
+ * buttons. Wraps the entire <App /> in main.tsx.
+ */
+
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 

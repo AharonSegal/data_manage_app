@@ -1,0 +1,18 @@
+{
+  "name": "DataCenter — Client Project Management",
+  "short_name": "DataCenter",
+  "description": "Offline-first client project management platform",
+  "theme_color": "#4f6ef7",
+  "background_color": "#f8faff",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

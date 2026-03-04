@@ -1,3 +1,9 @@
+/**
+ * LoginPage.tsx — Google Sign-In screen.
+ * Shown to unauthenticated users. Calls signInWithGoogle() from AuthContext.
+ * After successful sign-in, AuthContext handles the role check and redirects.
+ */
+
 import { useState } from 'react';
 import { useAuth } from '@/shared/context/AuthContext';
 import { APP_CONFIG } from '@/config/app.config';

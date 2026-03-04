@@ -1,3 +1,11 @@
+/**
+ * firebase.ts — Firebase initialization.
+ *
+ * Initialises the Firebase app, Firestore (with offline-first IndexedDB
+ * persistence and multi-tab support), and Firebase Auth.
+ * All env vars come from .env.local (never committed).
+ */
+
 import { initializeApp } from 'firebase/app';
 import {
   initializeFirestore,

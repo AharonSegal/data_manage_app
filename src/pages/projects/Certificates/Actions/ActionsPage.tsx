@@ -1,3 +1,4 @@
+/** Certificates — Actions page stub. Content (email/WhatsApp workflows) will be added in Stage 3. */
 import { PageHeader } from '@/shared/components/Layout/PageHeader';
 
 const ActionsPage = () => {

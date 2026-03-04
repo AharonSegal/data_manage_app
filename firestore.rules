@@ -21,6 +21,11 @@ service cloud.firestore {
                     && request.resource.data.role == resource.data.role;
     }
 
+    // Activity log — admin only (read + write)
+    match /activityLogs/{logId} {
+      allow read, write: if isAdmin();
+    }
+
     // Everything else (notes, future collections) — admin only
     match /{document=**} {
       allow read, write: if isAdmin();

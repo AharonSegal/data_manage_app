@@ -1,3 +1,9 @@
+/**
+ * SettingsPage.tsx — account and app preferences.
+ * Sections: Profile (avatar, name, email, role badge), Appearance (theme toggle),
+ * About (version, tagline), Account (sign out).
+ */
+
 import { LogOut, Shield } from 'lucide-react';
 import { PageHeader } from '@/shared/components/Layout/PageHeader';
 import { ThemeToggle } from '@/shared/components/ThemeToggle/ThemeToggle';

@@ -14,7 +14,7 @@ The system runs in two modes simultaneously:
 
 Both modes use the same React codebase. The distinction is handled at the `IS_NATIVE` flag level.
 
-**Current version:** v1.0.0 — Stage 1
+**Current version:** v1.1.0 — Base System Complete
 
 ---
 
@@ -23,7 +23,7 @@ Both modes use the same React codebase. The distinction is handled at the `IS_NA
 ### Frontend
 | Technology | Version | Purpose |
 |---|---|---|
-| React | 19.2.0 | UI framework |
+| React | 19.2.0 | UI framework (with code splitting via React.lazy + Suspense) |
 | TypeScript | 5.9.3 | Type safety, strict mode |
 | Vite | 7.3.1 | Build tool, dev server |
 | React Router DOM | 7.13.1 | Client-side routing |
@@ -46,9 +46,10 @@ Both modes use the same React codebase. The distinction is handled at the `IS_NA
 ### Backend / Infrastructure
 | Technology | Purpose |
 |---|---|
-| Firebase Firestore | Primary database (real-time, offline-first) |
+| Firebase Firestore | Primary database (real-time, offline-first) — collections: `notes`, `activityLogs`, `users` |
 | Firebase Auth | Google Sign-In, user identity |
 | Firebase Hosting | Web deployment (`data-manage-app-19d66.web.app`) |
+| Firebase Cloud Functions | HTTPS Callable endpoints for email + WhatsApp (scaffold in `functions/`) |
 | Capacitor | Android APK wrapper |
 
 ### Services (server-side, `services/`)
@@ -111,8 +112,11 @@ data_manage_app/
 │       │   ├── ErrorBoundary/
 │       │   │   └── ErrorBoundary.tsx     # React class error boundary
 │       │   ├── Layout/
-│       │   │   ├── AppLayout.tsx         # Sidebar + main content shell
-│       │   │   └── PageHeader.tsx        # Title + subtitle + usePageTitle
+│       │   │   ├── AppLayout.tsx         # Sidebar + OfflineBar + mobile label + outlet
+│       │   │   ├── Breadcrumbs.tsx       # Auto breadcrumbs from NAV_ITEMS on deep routes
+│       │   │   └── PageHeader.tsx        # Title + subtitle + breadcrumbs + usePageTitle
+│       │   ├── OfflineBar/
+│       │   │   └── OfflineBar.tsx        # Animated offline banner (Framer Motion slide)
 │       │   ├── NotesEditor/
 │       │   │   ├── NoteCard.tsx          # Note list card (preview, tags, pin, delete)
 │       │   │   ├── NotesList.tsx         # Scrollable note list with search + sections
@@ -139,22 +143,27 @@ data_manage_app/
 │       │   └── routes.ts         # ROUTES — all path constants (never hardcoded strings)
 │       │
 │       ├── context/
+│       │   ├── ActivityContext.tsx # Activity log state + Firestore CRUD + logActivity()
 │       │   ├── AuthContext.tsx   # User, role, isAdmin, signIn, signOut
 │       │   ├── NotesContext.tsx  # All notes state + Firestore CRUD
 │       │   └── ThemeContext.tsx  # light/dark theme state + localStorage persistence
 │       │
 │       ├── hooks/
-│       │   ├── use-mobile.ts     # useIsMobile() — breakpoint detection
-│       │   ├── useAuth.ts        # Re-export of useAuth from AuthContext
-│       │   ├── useNotes.ts       # Re-export of useNotes from NotesContext
-│       │   ├── usePageTitle.ts   # Sets document.title on mount
-│       │   └── useTheme.ts       # Re-export of useTheme from ThemeContext
+│       │   ├── use-mobile.ts            # useIsMobile() — breakpoint detection
+│       │   ├── useAuth.ts               # Re-export of useAuth from AuthContext
+│       │   ├── useCurrentPageLabel.ts   # Derives page label from pathname (for mobile top bar)
+│       │   ├── useNoteKeyboardShortcut.ts # 'N' key → create note (ignores inputs/editors)
+│       │   ├── useNotes.ts              # Re-export of useNotes from NotesContext
+│       │   ├── useOnlineStatus.ts       # Tracks navigator.onLine via event listeners
+│       │   ├── usePageTitle.ts          # Sets document.title on mount
+│       │   └── useTheme.ts              # Re-export of useTheme from ThemeContext
 │       │
 │       ├── styles/
 │       │   ├── globals.css       # Base styles, BlockNote overrides, tag editor dark mode
 │       │   └── theme.css         # All CSS color variables (light + dark)
 │       │
 │       └── types/
+│           ├── activity.types.ts # ActivityEntry, ActivityType, ActivityStatus, Firestore variant
 │           ├── nav.types.ts      # NavItem interface
 │           ├── note.types.ts     # Note interface
 │           └── project.types.ts  # Project-related types
@@ -178,9 +187,17 @@ data_manage_app/
 │   ├── package.json              # CommonJS, isolated from Vite app
 │   └── tsconfig.json             # Node.js CommonJS TS config
 │
+├── functions/                    # Firebase Cloud Functions (Node.js 20)
+│   ├── src/
+│   │   ├── index.ts              # Re-exports all callable functions
+│   │   ├── gmail/index.ts        # sendEmailHttp — HTTPS callable wrapping sendEmail()
+│   │   └── whatsapp/index.ts     # sendWhatsAppHttp — HTTPS callable wrapping sendWhatsApp()
+│   ├── package.json              # Depends on firebase-functions v6 + datacenter-services (local)
+│   └── tsconfig.json             # CommonJS, ES2020
+│
 ├── android/                      # Capacitor Android project (generated)
 ├── dist/                         # Vite build output (gitignored)
-├── public/                       # Static assets
+├── public/                       # Static assets (favicon.svg, manifest.json)
 │
 ├── .env.local                    # Firebase config env vars (gitignored)
 ├── .env.example                  # Firebase env var template (safe to commit)
@@ -281,6 +298,15 @@ notes/                  — flat collection, all notes from all projects
     tags: string[]
     projectId: string     — 'global' | 'certificates' | 'project-b' | any future project
     color?: string        — reserved for future color coding
+
+activityLogs/           — activity log, most recent 100 entries
+  {logId}/
+    timestamp: Timestamp  — serverTimestamp() on write
+    type: string          — 'email' | 'whatsapp' | 'data_import' | 'note' | 'manual' | 'system'
+    description: string   — human-readable event description
+    status: string        — 'success' | 'failed' | 'pending'
+    projectId?: string    — optional, links entry to a project
+    metadata?: object     — optional, extra context (e.g. recipient, message ID)
 
 users/                  — user profile + role
   {uid}/
@@ -648,9 +674,16 @@ TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_FROM
 - Firebase Hosting deployment
 - Firestore security rules
 - Capacitor Android configuration
+- **Code splitting** — all 13 pages lazy-loaded (React.lazy + Suspense), reduces initial bundle
+- **PWA manifest** — `public/manifest.json` + theme-color meta tag + apple-mobile-web-app support
+- **Offline indicator** — `OfflineBar` slides in when connection lost (Framer Motion), auto-hides on reconnect
+- **N keyboard shortcut** — on any notes page, pressing `N` creates a new note (safe: ignores inputs/editors)
+- **Mobile page label** — mobile top bar shows current page name (derived from `NAV_ITEMS` via `useCurrentPageLabel`)
+- **Activity Log** — `activityLogs` Firestore collection, `ActivityContext`, `logActivity()` function, full timeline UI
+- **Breadcrumbs** — on deep routes (2+ segments), `Breadcrumbs` component renders clickable path trail above page title
+- **Cloud Functions scaffold** — `functions/` directory wired to `services/`, two HTTPS callables ready to deploy
 
 ### Stub Pages (structure exists, no content) 🔲
-- `ActivityLogPage` — header only
 - `CertificatesOverviewPage` — header only
 - `AllEntriesPage` — header only
 - `ImportPage` — header only
@@ -704,12 +737,12 @@ No external state library. Everything via React Context:
 
 ## 16. Known Limitations at Base State
 
-- **Activity Log** is a stub — no logging system built yet
 - **Dashboard** shows notes only — stats/overview cards will be added once real project data exists
-- **No Cloud Functions** — the services infrastructure exists but isn't wired to any endpoint; all automation is manual until Firebase Functions are set up
+- **Cloud Functions not yet deployed** — scaffold exists in `functions/`, needs `firebase deploy --only functions` and credentials in `services/.env`
 - **Skeletons not yet used** — components exist but stub pages don't show loading states (they have no async data to load yet)
 - **Android auth.config.ts** — `HARDCODED_UID` is a placeholder; must be filled with real Firebase UID before building the APK
+- **Activity Log is read-only from UI** — writing entries happens via `logActivity()` from `ActivityContext`; no manual entry UI exists (entries come from automated actions)
 
 ---
 
-*Base state complete as of: March 2026 — v1.0.0 Stage 1*
+*Base state complete as of: March 2026 — v1.1.0*

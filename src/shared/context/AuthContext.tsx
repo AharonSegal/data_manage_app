@@ -1,3 +1,11 @@
+/**
+ * AuthContext.tsx — authentication state for the entire app.
+ *
+ * Web flow: Google Sign-In → Firestore role check → isAdmin gate.
+ * Android (IS_NATIVE): skips auth entirely, always grants admin access.
+ * Roles: 'admin' (full access) | 'pending' (default) | 'blocked'.
+ */
+
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import {
   GoogleAuthProvider,

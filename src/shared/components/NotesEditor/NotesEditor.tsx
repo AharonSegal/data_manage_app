@@ -1,3 +1,11 @@
+/**
+ * NotesEditor — full rich-text editor panel for a single note.
+ *
+ * Contains an editable title (saves on blur), a tag editor, a project
+ * label selector, a toolbar (pin / delete), and the BlockNote block editor
+ * with a custom Copy button. Saves are debounced 1 s after the user stops typing.
+ */
+
 import '@blocknote/core/fonts/inter.css';
 import '@blocknote/shadcn/style.css';
 import {
@@ -18,7 +26,6 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { Pin, Trash2, Copy, Check } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { TagsInput } from 'react-tag-input-component';
-import { toast } from 'sonner';
 import { type Note } from '@/shared/types/note.types';
 import { useTheme } from '@/shared/hooks/useTheme';
 import { Button } from '@/shared/components/ui/button';
@@ -118,9 +125,9 @@ export const NotesEditor = ({
     [note.id, onUpdateTags]
   );
 
+  // Delegate delete to the parent page (which owns the undo-toast flow)
   const handleDelete = useCallback(() => {
     onDelete(note.id);
-    toast('Note deleted');
   }, [note.id, onDelete]);
 
   const handleProjectChange = useCallback(

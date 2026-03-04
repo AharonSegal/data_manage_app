@@ -1,3 +1,11 @@
+/**
+ * projects.ts — flat list of projects derived from nav.ts.
+ *
+ * PROJECTS is auto-built from NAV_ITEMS (section: 'projects') plus the
+ * hard-coded 'global' (General) entry. Adding a project to nav.ts
+ * automatically makes it available in the Notes editor's project selector.
+ */
+
 import { NAV_ITEMS } from './nav';
 
 export interface ProjectEntry {

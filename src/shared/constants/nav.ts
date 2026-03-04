@@ -1,3 +1,11 @@
+/**
+ * nav.ts — sidebar navigation tree (NAV_ITEMS).
+ *
+ * Single source of truth for all nav items, their icons, paths, and nesting.
+ * Adding an item here automatically adds it to the sidebar and the Notes
+ * editor's project label selector (via projects.ts which derives from this).
+ */
+
 import { type NavItem } from '@/shared/types/nav.types';
 import { ROUTES } from './routes';
 

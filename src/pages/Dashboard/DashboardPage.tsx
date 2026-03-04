@@ -1,3 +1,11 @@
+/**
+ * DashboardPage.tsx — master notes view showing ALL notes across every project.
+ *
+ * Same split-panel layout as the per-project notes pages, but pulls all notes
+ * from NotesContext (not filtered). New notes created here are assigned to
+ * the 'global' project. NoteCards show a project label badge.
+ */
+
 import { useState } from 'react';
 import { ArrowLeft, NotebookPen } from 'lucide-react';
 import { toast } from 'sonner';

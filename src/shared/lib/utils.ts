@@ -1,3 +1,8 @@
+/**
+ * utils.ts — shared utility functions.
+ * `cn` merges Tailwind classes safely using clsx + tailwind-merge.
+ */
+
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 

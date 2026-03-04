@@ -1,3 +1,8 @@
+/**
+ * NotFoundPage.tsx — 404 catch-all route.
+ * Shown for any path that doesn't match a defined route.
+ */
+
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/shared/constants/routes';
 

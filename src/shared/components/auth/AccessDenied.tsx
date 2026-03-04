@@ -1,3 +1,9 @@
+/**
+ * AccessDenied.tsx — shown to authenticated users without admin role.
+ * Deliberately vague (displays "404") to avoid revealing that access control exists.
+ * Provides a subtle sign-out link for pending/blocked users.
+ */
+
 import { useAuth } from '@/shared/context/AuthContext';
 
 export const AccessDenied = () => {

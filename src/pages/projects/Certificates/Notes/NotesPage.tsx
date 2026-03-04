@@ -1,3 +1,9 @@
+/**
+ * NotesPage.tsx — Certificates project notes at /certificates/notes.
+ * Shows only notes with projectId === 'certificates'. Desktop: split panel.
+ * Mobile: single-column with back-navigation.
+ */
+
 import { useState } from 'react';
 import { ArrowLeft, NotebookPen } from 'lucide-react';
 import { toast } from 'sonner';
@@ -5,6 +11,7 @@ import { useNotes } from '@/shared/hooks/useNotes';
 import { NotesList } from '@/shared/components/NotesEditor/NotesList';
 import { NotesEditor } from '@/shared/components/NotesEditor/NotesEditor';
 import { useIsMobile } from '@/shared/hooks/use-mobile';
+import { useNoteKeyboardShortcut } from '@/shared/hooks/useNoteKeyboardShortcut';
 import { Button } from '@/shared/components/ui/button';
 
 const PROJECT_ID = 'certificates';
@@ -38,6 +45,8 @@ const NotesPage = () => {
     if (isMobile) setShowEditor(true);
     toast.success('New note created');
   };
+
+  useNoteKeyboardShortcut(handleCreateNote);
 
   const handleDelete = (id: string) => {
     const note = notes.find((n) => n.id === id);

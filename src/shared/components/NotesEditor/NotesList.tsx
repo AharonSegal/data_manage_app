@@ -1,3 +1,11 @@
+/**
+ * NotesList — scrollable list panel for notes.
+ *
+ * Renders a search bar, "New" button, and the note cards split into
+ * Pinned / All Notes sections. Delegates delete and pin logic to the
+ * parent page (which owns the undo-toast flow).
+ */
+
 import { useState } from 'react';
 import { Plus, Search, NotebookPen } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -5,7 +13,6 @@ import { toast } from 'sonner';
 import { type Note } from '@/shared/types/note.types';
 import { NoteCard } from './NoteCard';
 import { Button } from '@/shared/components/ui/button';
-import { useNotes } from '@/shared/context/NotesContext';
 
 interface NotesListProps {
   notes: Note[];
@@ -27,8 +34,8 @@ export const NotesList = ({
   showProjectLabel,
 }: NotesListProps) => {
   const [search, setSearch] = useState('');
-  const { restoreNote } = useNotes();
 
+  // Filter by title or tags, then split into pinned / unpinned sections
   const filtered = notes.filter((n) => {
     if (!search.trim()) return true;
     const q = search.toLowerCase();
@@ -38,32 +45,14 @@ export const NotesList = ({
     );
   });
 
-  const pinned = [...filtered]
-    .filter((n) => n.pinned)
-    .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+  const byUpdated = (a: Note, b: Note) => b.updatedAt.getTime() - a.updatedAt.getTime();
+  const pinned = filtered.filter((n) => n.pinned).sort(byUpdated);
+  const unpinned = filtered.filter((n) => !n.pinned).sort(byUpdated);
 
-  const unpinned = [...filtered]
-    .filter((n) => !n.pinned)
-    .sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
-
-  const handleCreateNote = () => {
-    onCreateNote();
-  };
-
+  // Pin toast lives here (pin has no undo); delete toast lives in the page-level handler
   const handleTogglePin = (id: string, wasPinned: boolean) => {
     onTogglePin(id);
     toast(wasPinned ? 'Note unpinned' : 'Note pinned');
-  };
-
-  const handleDelete = (note: Note) => {
-    const snapshot = { ...note };
-    onDeleteNote(note.id);
-    toast('Note deleted', {
-      action: {
-        label: 'Undo',
-        onClick: () => restoreNote(snapshot),
-      },
-    });
   };
 
   return (
@@ -73,7 +62,7 @@ export const NotesList = ({
         <h2 className="text-sm font-semibold text-[var(--color-text-secondary)] uppercase tracking-wider">
           Notes
         </h2>
-        <Button size="sm" onClick={handleCreateNote} className="h-7 gap-1.5 text-xs">
+        <Button size="sm" onClick={onCreateNote} className="h-7 gap-1.5 text-xs">
           <Plus className="h-3.5 w-3.5" />
           New
         </Button>
@@ -92,10 +81,10 @@ export const NotesList = ({
         </div>
       </div>
 
-      {/* List */}
+      {/* Note cards */}
       <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-1">
         {filtered.length === 0 ? (
-          <EmptyState search={search} onCreateNote={handleCreateNote} />
+          <EmptyState search={search} onCreateNote={onCreateNote} />
         ) : (
           <AnimatePresence>
             {pinned.length > 0 && (
@@ -108,7 +97,7 @@ export const NotesList = ({
                     isSelected={selectedNote?.id === note.id}
                     onSelect={() => onSelectNote(note)}
                     onTogglePin={() => handleTogglePin(note.id, note.pinned)}
-                    onDelete={() => handleDelete(note)}
+                    onDelete={() => onDeleteNote(note.id)}
                     showProjectLabel={showProjectLabel}
                   />
                 ))}
@@ -124,7 +113,7 @@ export const NotesList = ({
                     isSelected={selectedNote?.id === note.id}
                     onSelect={() => onSelectNote(note)}
                     onTogglePin={() => handleTogglePin(note.id, note.pinned)}
-                    onDelete={() => handleDelete(note)}
+                    onDelete={() => onDeleteNote(note.id)}
                     showProjectLabel={showProjectLabel}
                   />
                 ))}
@@ -137,6 +126,7 @@ export const NotesList = ({
   );
 };
 
+// Section label — "PINNED" or "ALL NOTES"
 const SectionHeader = ({ label }: { label: string }) => (
   <motion.p
     layout
@@ -146,6 +136,7 @@ const SectionHeader = ({ label }: { label: string }) => (
   </motion.p>
 );
 
+// Shown when there are no notes (or no search results)
 const EmptyState = ({
   search,
   onCreateNote,

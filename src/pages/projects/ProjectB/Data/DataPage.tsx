@@ -1,3 +1,4 @@
+/** Project B — Data page stub. Content will be added in Stage 2. */
 import { PageHeader } from '@/shared/components/Layout/PageHeader';
 
 const DataPage = () => {

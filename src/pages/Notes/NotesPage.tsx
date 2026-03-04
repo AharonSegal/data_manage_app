@@ -1,8 +1,15 @@
+/**
+ * NotesPage.tsx — global (General) notes page at /notes.
+ * Shows only notes with projectId === 'global'. Desktop: split panel
+ * (list + editor). Mobile: single-column with back-navigation.
+ */
+
 import { ArrowLeft, NotebookPen } from 'lucide-react';
 import { useNotes } from '@/shared/hooks/useNotes';
 import { NotesList } from '@/shared/components/NotesEditor/NotesList';
 import { NotesEditor } from '@/shared/components/NotesEditor/NotesEditor';
 import { useIsMobile } from '@/shared/hooks/use-mobile';
+import { useNoteKeyboardShortcut } from '@/shared/hooks/useNoteKeyboardShortcut';
 import { Button } from '@/shared/components/ui/button';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -38,6 +45,8 @@ const NotesPage = () => {
     if (isMobile) setShowEditor(true);
     toast.success('New note created');
   };
+
+  useNoteKeyboardShortcut(handleCreateNote);
 
   const handleDelete = (id: string) => {
     const note = notes.find((n) => n.id === id);
