@@ -1,0 +1,114 @@
+/* ============================================================
+   DESIGN TOKENS — Light & Dark mode color variables
+   All component colors reference these. Never hardcode hex values
+   in components — always use var(--color-*)
+   ============================================================ */
+
+:root {
+  /* Brand */
+  --color-brand: #4f6ef7;
+  --color-brand-hover: #3b5bdb;
+  --color-brand-subtle: rgba(79, 110, 247, 0.12);
+
+  /* Backgrounds */
+  --color-bg: #f8faff;
+  --color-bg-secondary: #f1f3fa;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+
+  /* Borders */
+  --color-border: #e2e6f0;
+  --color-border-subtle: #edf0f7;
+
+  /* Text */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+  --color-text-inverted: #ffffff;
+
+  /* Sidebar */
+  --color-sidebar-bg: #f0f2fa;
+  --color-sidebar-active: #4f6ef7;
+  --color-sidebar-active-text: #ffffff;
+  --color-sidebar-hover: #e4e8f5;
+  --color-sidebar-text: #374151;
+  --color-sidebar-section: #9ca3af;
+  --color-sidebar-border: #e2e6f0;
+
+  /* Status */
+  --color-success: #10b981;
+  --color-success-subtle: rgba(16, 185, 129, 0.1);
+  --color-warning: #f59e0b;
+  --color-warning-subtle: rgba(245, 158, 11, 0.1);
+  --color-error: #ef4444;
+  --color-error-subtle: rgba(239, 68, 68, 0.1);
+  --color-info: #06b6d4;
+  --color-info-subtle: rgba(6, 182, 212, 0.1);
+
+  /* Notes */
+  --color-note-card-bg: #ffffff;
+  --color-note-card-border: #e2e6f0;
+  --color-note-card-hover: #f5f7ff;
+  --color-note-card-active: #eef1ff;
+
+  /* Radius */
+  --radius: 0.5rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+}
+
+.dark {
+  /* Brand */
+  --color-brand: #6183f8;
+  --color-brand-hover: #4f6ef7;
+  --color-brand-subtle: rgba(97, 131, 248, 0.15);
+
+  /* Backgrounds */
+  --color-bg: #0e1015;
+  --color-bg-secondary: #13151c;
+  --color-surface: #1a1d27;
+  --color-surface-raised: #1f2232;
+
+  /* Borders */
+  --color-border: #2a2d3e;
+  --color-border-subtle: #21243a;
+
+  /* Text */
+  --color-text-primary: #e8eaf0;
+  --color-text-secondary: #8b90a8;
+  --color-text-tertiary: #555a72;
+  --color-text-inverted: #0e1015;
+
+  /* Sidebar */
+  --color-sidebar-bg: #11131b;
+  --color-sidebar-active: #6183f8;
+  --color-sidebar-active-text: #ffffff;
+  --color-sidebar-hover: #1e2132;
+  --color-sidebar-text: #c5c9dc;
+  --color-sidebar-section: #484d63;
+  --color-sidebar-border: #1e2132;
+
+  /* Status */
+  --color-success: #34d399;
+  --color-success-subtle: rgba(52, 211, 153, 0.12);
+  --color-warning: #fbbf24;
+  --color-warning-subtle: rgba(251, 191, 36, 0.12);
+  --color-error: #f87171;
+  --color-error-subtle: rgba(248, 113, 113, 0.12);
+  --color-info: #22d3ee;
+  --color-info-subtle: rgba(34, 211, 238, 0.12);
+
+  /* Notes */
+  --color-note-card-bg: #1a1d27;
+  --color-note-card-border: #2a2d3e;
+  --color-note-card-hover: #1f2232;
+  --color-note-card-active: #22263a;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.35), 0 2px 4px -2px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+}
