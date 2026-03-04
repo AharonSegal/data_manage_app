@@ -1,13 +1,13 @@
-import { useState } from 'react';
 import { ArrowLeft, NotebookPen } from 'lucide-react';
-import { toast } from 'sonner';
 import { useNotes } from '@/shared/hooks/useNotes';
 import { NotesList } from '@/shared/components/NotesEditor/NotesList';
 import { NotesEditor } from '@/shared/components/NotesEditor/NotesEditor';
 import { useIsMobile } from '@/shared/hooks/use-mobile';
 import { Button } from '@/shared/components/ui/button';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
-const PROJECT_ID = 'project-b';
+const PROJECT_ID = 'global';
 
 const NotesPage = () => {
   const {
@@ -52,6 +52,7 @@ const NotesPage = () => {
     });
   };
 
+  // Mobile: show either list or editor
   if (isMobile) {
     if (showEditor && selectedNote) {
       return (
@@ -95,8 +96,10 @@ const NotesPage = () => {
     );
   }
 
+  // Desktop: split panel
   return (
     <div className="flex h-full">
+      {/* Left panel — 280px fixed */}
       <div className="w-[280px] shrink-0 border-r border-[var(--color-border)] bg-[var(--color-bg-secondary)] flex flex-col">
         <NotesList
           notes={notes}
@@ -107,6 +110,8 @@ const NotesPage = () => {
           onDeleteNote={handleDelete}
         />
       </div>
+
+      {/* Right panel — flex-1 */}
       <div className="flex-1 bg-[var(--color-surface)] flex flex-col min-w-0">
         {selectedNote ? (
           <NotesEditor
@@ -128,7 +133,7 @@ const NotesPage = () => {
               Select a note or create a new one
             </p>
             <p className="text-xs text-[var(--color-text-tertiary)]">
-              Your notes support rich text, Hebrew, and tags
+              Press <kbd className="px-1.5 py-0.5 rounded border border-[var(--color-border)] text-[10px] font-mono bg-[var(--color-bg-secondary)]">N</kbd> to create a new note
             </p>
           </div>
         )}

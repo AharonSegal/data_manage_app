@@ -82,6 +82,65 @@
 }
 
 /* ============================================================
+   REACT-TAG-INPUT-COMPONENT OVERRIDES
+   ============================================================ */
+
+.tags-editor-wrapper .rti--container {
+  background: transparent !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+  gap: 4px !important;
+  min-height: 32px !important;
+  box-shadow: none !important;
+}
+
+.tags-editor-wrapper .rti--container:focus-within {
+  border-color: var(--color-brand) !important;
+  outline: none !important;
+}
+
+.tags-editor-wrapper .rti--tag {
+  background: var(--color-bg-secondary) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  padding: 1px 6px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.tags-editor-wrapper .rti--tag button {
+  color: var(--color-text-tertiary) !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  line-height: 1 !important;
+}
+
+.tags-editor-wrapper .rti--tag button:hover {
+  color: var(--color-text-primary) !important;
+}
+
+.tags-editor-wrapper .rti--input {
+  background: transparent !important;
+  color: var(--color-text-primary) !important;
+  font-size: 12px !important;
+  border: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  min-width: 80px !important;
+}
+
+.tags-editor-wrapper .rti--input::placeholder {
+  color: var(--color-text-tertiary) !important;
+}
+
+/* ============================================================
    SHADCN/UI CSS VARIABLES (required by shadcn components)
    ============================================================ */
 

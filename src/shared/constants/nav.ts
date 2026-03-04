@@ -24,6 +24,13 @@ export const NAV_ITEMS: NavItem[] = [
     section: 'global',
   },
   {
+    id: 'notes',
+    label: 'Notes',
+    icon: 'NotebookPen',
+    path: ROUTES.NOTES,
+    section: 'global',
+  },
+  {
     id: 'certificates',
     label: 'Certificates',
     icon: 'ScrollText',

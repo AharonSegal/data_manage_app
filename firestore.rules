@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: check if the requesting user is an admin
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // User profiles
+    // - Any authenticated user can read their own document (to check their role)
+    // - Any authenticated user can create their own document (first sign-in)
+    // - Users can update their own document ONLY if they don't change the role field
+    match /users/{userId} {
+      allow read:   if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.role == resource.data.role;
+    }
+
+    // Everything else (notes, future collections) — admin only
+    match /{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

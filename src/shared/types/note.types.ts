@@ -7,4 +7,5 @@ export interface Note {
   pinned: boolean;
   tags: string[];
   projectId: string;
+  color?: string;
 }

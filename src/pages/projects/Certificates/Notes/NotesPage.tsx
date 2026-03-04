@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, NotebookPen } from 'lucide-react';
+import { toast } from 'sonner';
 import { useNotes } from '@/shared/hooks/useNotes';
 import { NotesList } from '@/shared/components/NotesEditor/NotesList';
 import { NotesEditor } from '@/shared/components/NotesEditor/NotesEditor';
@@ -9,8 +10,19 @@ import { Button } from '@/shared/components/ui/button';
 const PROJECT_ID = 'certificates';
 
 const NotesPage = () => {
-  const { getNotesForProject, selectedNote, setSelectedNote, createNote, updateNote, togglePin } =
-    useNotes();
+  const {
+    getNotesForProject,
+    selectedNote,
+    setSelectedNote,
+    createNote,
+    updateNote,
+    deleteNote,
+    togglePin,
+    renameNote,
+    updateTags,
+    updateNoteProject,
+    restoreNote,
+  } = useNotes();
   const isMobile = useIsMobile();
   const [showEditor, setShowEditor] = useState(false);
 
@@ -24,6 +36,20 @@ const NotesPage = () => {
   const handleCreateNote = () => {
     createNote(PROJECT_ID);
     if (isMobile) setShowEditor(true);
+    toast.success('New note created');
+  };
+
+  const handleDelete = (id: string) => {
+    const note = notes.find((n) => n.id === id);
+    if (!note) return;
+    const snapshot = { ...note };
+    deleteNote(id);
+    toast('Note deleted', {
+      action: {
+        label: 'Undo',
+        onClick: () => restoreNote(snapshot),
+      },
+    });
   };
 
   // Mobile: show either list or editor
@@ -42,7 +68,16 @@ const NotesPage = () => {
               Notes
             </Button>
           </div>
-          <NotesEditor note={selectedNote} onUpdate={updateNote} />
+          <NotesEditor
+            key={selectedNote.id}
+            note={selectedNote}
+            onUpdate={updateNote}
+            onRename={renameNote}
+            onUpdateTags={updateTags}
+            onTogglePin={togglePin}
+            onDelete={handleDelete}
+            onUpdateProject={updateNoteProject}
+          />
         </div>
       );
     }
@@ -55,6 +90,7 @@ const NotesPage = () => {
           onSelectNote={handleSelectNote}
           onCreateNote={handleCreateNote}
           onTogglePin={togglePin}
+          onDeleteNote={handleDelete}
         />
       </div>
     );
@@ -62,8 +98,7 @@ const NotesPage = () => {
 
   // Desktop: split panel
   return (
-    <div className="flex h-[calc(100vh-0px)] md:h-full">
-      {/* Left panel — notes list (30%) */}
+    <div className="flex h-full">
       <div className="w-[280px] shrink-0 border-r border-[var(--color-border)] bg-[var(--color-bg-secondary)] flex flex-col">
         <NotesList
           notes={notes}
@@ -71,17 +106,25 @@ const NotesPage = () => {
           onSelectNote={handleSelectNote}
           onCreateNote={handleCreateNote}
           onTogglePin={togglePin}
+          onDeleteNote={handleDelete}
         />
       </div>
-
-      {/* Right panel — editor (70%) */}
-      <div className="flex-1 bg-[var(--color-surface)] flex flex-col">
+      <div className="flex-1 bg-[var(--color-surface)] flex flex-col min-w-0">
         {selectedNote ? (
-          <NotesEditor note={selectedNote} onUpdate={updateNote} />
+          <NotesEditor
+            key={selectedNote.id}
+            note={selectedNote}
+            onUpdate={updateNote}
+            onRename={renameNote}
+            onUpdateTags={updateTags}
+            onTogglePin={togglePin}
+            onDelete={handleDelete}
+            onUpdateProject={updateNoteProject}
+          />
         ) : (
           <div className="flex h-full items-center justify-center flex-col gap-3">
             <div className="w-16 h-16 rounded-2xl bg-[var(--color-bg-secondary)] flex items-center justify-center mb-2">
-              <span className="text-2xl">📝</span>
+              <NotebookPen className="h-7 w-7 text-[var(--color-text-tertiary)]" />
             </div>
             <p className="text-sm font-medium text-[var(--color-text-secondary)]">
               Select a note or create a new one

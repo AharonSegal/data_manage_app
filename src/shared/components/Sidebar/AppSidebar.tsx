@@ -13,11 +13,14 @@ import {
 import { SidebarNavItem } from './SidebarNavItem';
 import { SidebarSection } from './SidebarSection';
 import { ThemeToggle } from '@/shared/components/ThemeToggle/ThemeToggle';
+import { useAuth } from '@/shared/context/AuthContext';
 
 const globalItems = NAV_ITEMS.filter((item) => item.section === 'global');
 const projectItems = NAV_ITEMS.filter((item) => item.section === 'projects');
 
 export const AppSidebar = () => {
+  const { user } = useAuth();
+
   return (
     <Sidebar>
       {/* Header — App Name */}
@@ -67,9 +70,27 @@ export const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer — Theme Toggle */}
+      {/* Footer — User profile + Theme Toggle */}
       <SidebarSeparator />
       <SidebarFooter>
+        {user && (
+          <div className="flex items-center gap-2.5 px-2.5 py-2 mb-0.5">
+            {user.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt={user.displayName ?? ''}
+                className="h-7 w-7 rounded-full object-cover flex-shrink-0"
+              />
+            ) : (
+              <div className="h-7 w-7 rounded-full bg-[var(--color-brand)] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                {user.displayName?.[0]?.toUpperCase() ?? '?'}
+              </div>
+            )}
+            <span className="text-xs font-medium text-[var(--color-sidebar-text)] truncate">
+              {user.displayName ?? user.email}
+            </span>
+          </div>
+        )}
         <ThemeToggle />
       </SidebarFooter>
     </Sidebar>

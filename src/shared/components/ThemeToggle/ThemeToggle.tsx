@@ -2,9 +2,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon } from 'lucide-react';
 import { useTheme } from '@/shared/hooks/useTheme';
 
-export const ThemeToggle = () => {
+export const ThemeToggle = ({ compact }: { compact?: boolean }) => {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
+
+  if (compact) {
+    return (
+      <button
+        onClick={toggleTheme}
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[var(--color-border)] text-sm text-[var(--color-text-secondary)] hover:bg-[var(--color-sidebar-hover)] transition-colors"
+      >
+        <div className="relative h-4 w-4 flex items-center justify-center">
+          <AnimatePresence mode="wait" initial={false}>
+            {isDark ? (
+              <motion.div key="moon" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="absolute">
+                <Moon className="h-4 w-4 text-[var(--color-brand)]" />
+              </motion.div>
+            ) : (
+              <motion.div key="sun" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="absolute">
+                <Sun className="h-4 w-4 text-[var(--color-warning)]" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        {isDark ? 'Dark' : 'Light'}
+      </button>
+    );
+  }
 
   return (
     <button
