@@ -29,6 +29,8 @@ export default defineConfig({
           blocknote: ['@blocknote/core', '@blocknote/react', '@blocknote/shadcn'],
           // Common vendor libs
           vendor: ['react', 'react-dom', 'react-router-dom', 'framer-motion', 'date-fns', 'sonner'],
+          // Phaser game engine — very large, isolated in its own chunk
+          phaser: ['phaser'],
         },
       },
     },

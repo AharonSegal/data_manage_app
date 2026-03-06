@@ -39,6 +39,13 @@ export const NAV_ITEMS: NavItem[] = [
     section: 'global',
   },
   {
+    id: 'game',
+    label: 'Munch Monsters',
+    icon: 'Gamepad2',
+    path: ROUTES.GAME,
+    section: 'global',
+  },
+  {
     id: 'certificates',
     label: 'Certificates',
     icon: 'ScrollText',

@@ -23,6 +23,8 @@ export const ROUTES = {
   PROJECT_B_DATA: '/project-b/data',
   PROJECT_B_ACTIONS: '/project-b/actions',
   PROJECT_B_NOTES: '/project-b/notes',
+
+  GAME: '/game',
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];

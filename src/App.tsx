@@ -34,6 +34,7 @@ const ActivityLogPage = lazy(() => import('@/pages/ActivityLog/ActivityLogPage')
 const SettingsPage = lazy(() => import('@/pages/Settings/SettingsPage'));
 const GlobalNotesPage = lazy(() => import('@/pages/Notes/NotesPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFound/NotFoundPage'));
+const GamePage     = lazy(() => import('@/pages/Game/GamePage'));
 
 // Certificates
 const CertificatesOverviewPage = lazy(() => import('@/pages/projects/Certificates/Overview/OverviewPage'));
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
       { path: ROUTES.ACTIVITY, element: <ActivityLogPage /> },
       { path: ROUTES.SETTINGS, element: <SettingsPage /> },
       { path: ROUTES.NOTES, element: <GlobalNotesPage /> },
+      { path: ROUTES.GAME, element: <GamePage /> },
 
       // Certificates
       { path: ROUTES.CERTIFICATES, element: <Navigate to={ROUTES.CERTIFICATES_OVERVIEW} replace /> },

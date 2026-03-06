@@ -21,6 +21,7 @@ import {
   Zap,
   NotebookPen,
   FolderOpen,
+  Gamepad2,
   ChevronRight,
   type LucideIcon,
 } from 'lucide-react';
@@ -48,6 +49,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Zap,
   NotebookPen,
   FolderOpen,
+  Gamepad2,
   ChevronRight,
 };
 
